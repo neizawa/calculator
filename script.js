@@ -1,8 +1,11 @@
 const display = document.querySelector(".display");
-const numbers = document.querySelectorAll(".numbers button");
-const operators = document.querySelectorAll(".operators button");
+const numbers = document.querySelectorAll(".number");
+const operators = document.querySelectorAll(".operator");
 const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
+const del = document.querySelector(".del");
+const percent = document.querySelector(".percent");
+const audio = new Audio('../sounds/vineboom.mp3');
 
 const value = [];
 let isOperatorOn = false;
@@ -43,6 +46,11 @@ function operate(operator, num1, num2) {
 
 numbers.forEach(number => {
     number.addEventListener('click', () => {
+        if (display.textContent.length === 10 && !isOperatorOn) {
+            alert("You have reached the limit of numbers!")
+            return
+        }
+
         if (number.textContent === "." && display.textContent.includes(".")) {
             return;
         }
@@ -88,11 +96,19 @@ function solveEquation() {
     }
 
     value.push(display.textContent);
-    display.textContent = "";
 
     if (value[2] === "0" && value[1] === "/") {
-        display.textContent = "🤨";
+        play();
+        setTimeout(() => {
+            display.textContent = "";
+            display.textContent = "🤨"
+        }, 500);
+
+        function play() {
+            audio.play();
+        }
     } else {
+        display.textContent = "";
         display.textContent = +parseFloat(operate(value[1], value[0], value[2])).toFixed(2);
     }
     
