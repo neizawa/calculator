@@ -121,3 +121,9 @@ clear.addEventListener('click', () => {
     display.textContent = "0";
     isOperatorOn = false;
 })
+
+del.addEventListener('click', () => {
+    display.textContent = display.textContent.slice(0, -1);
+    if (display.textContent === "")
+        display.textContent = "0"
+})
