@@ -2,8 +2,12 @@ const display = document.querySelector(".display");
 const numbers = document.querySelectorAll(".numbers button");
 const operators = document.querySelectorAll(".operators button");
 const equals = document.querySelector(".equals");
+const clear = document.querySelector(".clear");
 
 const value = [];
+let isOperatorOn = false;
+let isResultDisplayed = false;
+let isDecimalOn = false;
 
 function add(a, b) {
     return a + b;
@@ -22,8 +26,8 @@ function divide(a, b) {
 }
 
 function operate(operator, num1, num2) {
-    num1 = parseInt(num1);
-    num2 = parseInt(num2);
+    num1 = parseFloat(num1);
+    num2 = parseFloat(num2);
 
     switch (operator) {
         case "+":
@@ -39,36 +43,65 @@ function operate(operator, num1, num2) {
 
 numbers.forEach(number => {
     number.addEventListener('click', () => {
-        if (display.textContent === "0") {
+        if (number.textContent === "." && display.textContent.includes(".")) {
+            return;
+        }
+
+        if (display.textContent === "0" && !(number.textContent === ".")|| display.textContent === "🤨") {
             display.textContent = "";
         }
 
-        if (value.length === 1) {
-            value.length = 0
+        if (isOperatorOn || isResultDisplayed) {
+            isOperatorOn = false;
+            isResultDisplayed = false;
             display.textContent = "";
         }
-        
+
         display.textContent += number.textContent;
     })
 });
 
 operators.forEach(operator => {
     operator.addEventListener('click', () => {
+        if (isOperatorOn) {
+            value.pop();
+            value.push(operator.textContent)
+            return;
+        }
+
         value.push(display.textContent);
+        if (value.length === 3) {
+            solveEquation();
+            value.push(display.textContent);
+        }
+
         value.push(operator.textContent)
-        display.textContent = "0";
+        isOperatorOn = true;
     })
 });
 
-equals.addEventListener('click', () => {
-    let result = 0;
+equals.addEventListener('click', solveEquation);
+
+function solveEquation() {
+    if (value.length < 2) {
+        return;
+    }
+
     value.push(display.textContent);
     display.textContent = "";
-    for (let i = 1; i < value.length; i += 2) {
-        result += operate(value[i], value[(i - 1)], value[(i + 1)]);
+
+    if (value[2] === "0" && value[1] === "/") {
+        display.textContent = "🤨";
+    } else {
+        display.textContent = +parseFloat(operate(value[1], value[0], value[2])).toFixed(2);
     }
     
     value.length = 0;
-    value.push(result);
-    display.textContent = result;
+    isResultDisplayed = true;
+}
+
+clear.addEventListener('click', () => {
+    value.length = 0;
+    display.textContent = "0";
+    isOperatorOn = false;
 })
