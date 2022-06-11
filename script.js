@@ -110,6 +110,9 @@ function solveEquation() {
     } else {
         display.textContent = "";
         display.textContent = +parseFloat(operate(value[1], value[0], value[2])).toFixed(2);
+        if (display.textContent.length > 10) {
+            display.textContent = parseFloat(display.textContent).toExponential(3)
+        }
     }
     
     value.length = 0;
@@ -126,4 +129,11 @@ del.addEventListener('click', () => {
     display.textContent = display.textContent.slice(0, -1);
     if (display.textContent === "")
         display.textContent = "0"
+})
+
+percent.addEventListener('click', () => {
+    display.textContent /= 100;
+    if (display.textContent.length > 10) {
+        display.textContent = parseFloat(display.textContent).toExponential(3)
+    }
 })

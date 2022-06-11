@@ -22,11 +22,11 @@ body {
 }
 
 #main {
-    margin: auto;
+    flex: 1;
 }
 
 .calculator {
-    border: solid 4px rgb(48, 45, 45);
+    border: solid 12px rgb(48, 45, 45);
     border-radius: 4px;
     display: grid;
     grid-template-columns: repeat(4,1fr);;
