@@ -1,3 +1,8 @@
+const display = document.querySelector(".display");
+const numbers = document.querySelectorAll(".numbers button");
+
+const displayValue = display.textContent;
+
 function add(a, b) {
     return a + b;
 }
@@ -17,16 +22,18 @@ function divide(a, b) {
 function operate(operator, num1, num2) {
     switch (operator) {
         case "+":
-            add(num1, num2)
-            break;
+            return add(num1, num2);
         case "-":
-            subtract(num1, num2)
-            break;
+            return subtract(num1, num2);
         case "*":
-            multiply(num1, num2)
-            break;
+            return multiply(num1, num2);
         case "/":
-            divide(num1, num2)
-            break;
+            return divide(num1, num2);
     }
 }
+
+numbers.forEach(number => {
+    number.addEventListener('click', () => {
+        display.textContent += number.textContent;
+    })
+});
