@@ -5,7 +5,7 @@ const equals = document.querySelector(".equals");
 const clear = document.querySelector(".clear");
 const del = document.querySelector(".del");
 const percent = document.querySelector(".percent");
-const audio = new Audio('../sounds/vineboom.mp3');
+const audio = new Audio('sounds/vineboom.mp3');
 
 const value = [];
 let isOperatorOn = false;
