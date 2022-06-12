@@ -13,15 +13,12 @@ body {
     height: 100vh;
 }
 
-#main, #footer {
+#main {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 16px 32px 16px 32px;
     flex-flow: wrap-reverse;
-}
-
-#main {
     flex: 1;
 }
 
@@ -31,12 +28,11 @@ body {
     display: grid;
     grid-template-columns: repeat(4,1fr);;
     background-color: black;
-    gap: 4px;
 }
 
 .display {
-    padding: 8px;
-    font-size: 64px;
+    padding: 16px;
+    font-size: 48px;
     background-color: lightgray;
     text-overflow: clip;
     overflow: hidden;
@@ -46,12 +42,15 @@ body {
     display: flex;
     justify-content: end;
     align-items: center;
+    border-bottom: solid 12px rgb(48, 45, 45);
+    font-weight: bold;
 }
 
 .calculator button {
     padding: 16px;
     font-size: 32px;
     min-width: 64px;
+    cursor: pointer;
 }
 
 .zero {
@@ -63,21 +62,25 @@ body {
     font-family: "Montserrat", sans-serif;
     background-color: black;
     font-size: 24px;
-}
-
-#footer div {
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px 16px 32px;
+    flex-flow: nowrap;
     color: white;
-    text-align: center;
-    padding: 16px;
-}
-
-#footer a {
-    text-decoration: none;
-    padding: 4px;
-    color: white;
-    transition: all 1s;
 }
 
 #footer a:hover {
     color: plum;
+}
+
+#footer img {
+    height: 36px;
+    width: auto;
+    -webkit-filter: invert(1);
+    filter: invert(1);
+    cursor: pointer;
+    text-align: end;
+    align-items: center;
 }
