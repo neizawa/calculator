@@ -8,11 +8,22 @@ const percent = document.querySelector(".percent");
 const audio = new Audio('sounds/vineboom.mp3');
 const value = [];
 
+display.textContent = '0'
 let isOperatorOn = false;
 let isResultDisplayed = false;
 
+clear.addEventListener('click', clearDisplay)
+del.addEventListener('click', useDeleteButton)
+percent.addEventListener('click', usePercentButton)
+equals.addEventListener('click', evaluate);
+numbers.forEach(number => {
+    number.addEventListener('click', () => addNumber(number.textContent));
+});
+operators.forEach(operator => {
+    operator.addEventListener('click', () => useOperator(operator.textContent))
+});
+window.addEventListener('keydown', useKeyboard)
 
-// Math functions
 function add(a, b) {
     return a + b;
 }
@@ -29,7 +40,6 @@ function divide(a, b) {
     return a / b;
 }
 
-// Operator function
 function operate(operator, num1, num2) {
     num1 = parseFloat(num1);
     num2 = parseFloat(num2);
@@ -46,62 +56,54 @@ function operate(operator, num1, num2) {
     }
 }
 
-// Number button function
-numbers.forEach(number => {
-    number.addEventListener('click', () => {
-        // If there are more than 10 symbols in display, returns in order to not break calculator
-        if (display.textContent.length === 10 && !isOperatorOn) {
-            alert("You have reached the limit of numbers!")
-            return
-        }
+function addNumber(number) {
+    // If there are more than 10 symbols in display, returns in order to not break calculator
+    if (display.textContent.length === 10 && !isOperatorOn) {
+        alert("You have reached the limit of numbers!")
+        return
+    }
 
-        // If there is already a decimal, returns 
-        if (number.textContent === "." && display.textContent.includes(".")) {
-            return;
-        }
+    // If there is already a decimal, returns 
+    if (number === "." && display.textContent.includes(".")) {
+        return;
+    }
 
-        // If there is only zero or NaN, removes symbol
-        if (display.textContent === "0" && !(number.textContent === ".")|| display.textContent === "🤨") {
-            display.textContent = "";
-        }
+    // If there is only zero or NaN, removes symbol
+    if (display.textContent === "0" && !(number === ".")|| display.textContent === "🤨") {
+        display.textContent = "";
+    }
 
-        // If operator mode is active and result displayed,
-        // clears display
-        if (isOperatorOn || isResultDisplayed) {
-            isOperatorOn = false;
-            isResultDisplayed = false;
-            display.textContent = "";
-        }
+    // If operator mode is active and result displayed,
+    // clears display
+    if (isOperatorOn || isResultDisplayed) {
+        isOperatorOn = false;
+        isResultDisplayed = false;
+        display.textContent = "";
+    }
 
-        display.textContent += number.textContent;
-    })
-});
+    display.textContent += number;
+}
 
-// Operator button function
-operators.forEach(operator => {
-    operator.addEventListener('click', () => {
-        // If operator mode is active, returns
-        if (isOperatorOn) {
-            value.pop();
-            value.push(operator.textContent)
-            return;
-        }
+function useOperator(operator) {
+    // If operator mode is active, returns
+    if (isOperatorOn) {
+        value.pop();
+        value.push(operator)
+        return;
+    }
 
-        // Solves equation, if there are two numbers
+    // Solves equation, if there are two numbers
+    value.push(display.textContent);
+    if (value.length === 3) {
+        evaluate();
         value.push(display.textContent);
-        if (value.length === 3) {
-            solveEquation();
-            value.push(display.textContent);
-        }
+    }
 
-        value.push(operator.textContent)
-        isOperatorOn = true;
-    })
-});
+    value.push(operator)
+    isOperatorOn = true;
+}
 
-equals.addEventListener('click', solveEquation);
-
-function solveEquation() {
+function evaluate() {
     // If there is only one number, returns
     if (value.length < 2) {
         return;
@@ -124,7 +126,7 @@ function solveEquation() {
     // converts to exponential
     else {
         display.textContent = "";
-        display.textContent = +parseFloat(operate(value[1], value[0], value[2])).toFixed(2);
+        display.textContent = Math.round((operate(value[1], value[0], value[2])) * 1000) / 1000;
         if (display.textContent.length > 10) {
             display.textContent = parseFloat(display.textContent).toExponential(3)
         }
@@ -134,24 +136,30 @@ function solveEquation() {
     isResultDisplayed = true;
 }
 
-// AC button function
-clear.addEventListener('click', () => {
+function clearDisplay() {
     value.length = 0;
     display.textContent = "0";
     isOperatorOn = false;
-})
+}
 
-// C button function
-del.addEventListener('click', () => {
+function useDeleteButton() {
     display.textContent = display.textContent.slice(0, -1);
     if (display.textContent === "")
         display.textContent = "0"
-})
+}
 
-// % button function
-percent.addEventListener('click', () => {
+function usePercentButton() {
     display.textContent /= 100;
     if (display.textContent.length > 10) {
         display.textContent = parseFloat(display.textContent).toExponential(3)
     }
-})
+}
+
+function useKeyboard(e) {
+    if(e.key >= 0 && e.key <= 9) addNumber(e.key);
+    if(e.key === "*" || e.key === "/" || e.key === "+" || e.key === "-" ) useOperator(e.key);
+    if(e.key === "Backspace") useDeleteButton();
+    if(e.key === "Enter") evaluate();
+    if(e.key === "Escape") clearDisplay();
+    if(e.key === "%") usePercentButton();
+}
